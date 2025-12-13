@@ -11,7 +11,7 @@ _HEIGHT = const(320)
 # SPI Bus Pins
 SPI_HOST = 1
 MOSI = 11
-MISO = None
+MISO = -1
 SCK = 12
 
 # Display Control Pins
@@ -21,6 +21,38 @@ RST = 14
 
 _FREQ = const(40_000_000)
 
+# Check if LVGL is already initialized
+if not lv.is_initialized():
+    lv.init()
+
+spi_bus = machine.SPI.Bus(
+    host=SPI_HOST,
+    mosi=MOSI,
+    miso=MISO,
+    sck=SCK,
+)
+
+display_bus = lcd_bus.SPIBus(
+    spi_bus=spi_bus,
+    freq=_FREQ,
+    dc=DC,
+    cs=CS,
+)
+
+display_driver = st7789.ST7789(
+    data_bus=display_bus,
+    display_width=_WIDTH,
+    display_height=_HEIGHT,
+    reset_pin=machine.Pin(RST, machine.Pin.OUT),
+    reset_state=st7789.STATE_LOW,
+    backlight_pin=None,
+    color_space=lv.COLOR_FORMAT.RGB565,
+    color_byte_order=st7789.BYTE_ORDER_BGR,
+    rgb565_byte_swap=True,
+)
+display_driver.init()
+display_driver.set_backlight(100)
+
 
 class Display:
     """
@@ -28,33 +60,6 @@ class Display:
     """
 
     def __init__(self):
-        self.spi_bus = machine.SPI(
-            SPI_HOST,
-            mosi=machine.Pin(MOSI),
-            miso=machine.Pin(MISO) if MISO is not None else None,
-            sck=machine.Pin(SCK),
-        )
-
-        self.display_bus = lcd_bus.SPIBus(
-            spi_bus=self.spi_bus,
-            freq=_FREQ,
-            dc=machine.Pin(DC),
-            cs=machine.Pin(CS),
-        )
-        self.display = st7789.ST7789(
-            data_bus=self.display_bus,
-            display_width=_WIDTH,
-            display_height=_HEIGHT,
-            reset_pin=machine.Pin(RST, machine.Pin.OUT),
-            reset_state=st7789.STATE_LOW,
-            backlight_pin=None,
-            color_space=lv.COLOR_FORMAT.RGB565,
-            color_byte_order=st7789.BYTE_ORDER_BGR,
-            rgb565_byte_swap=True,
-        )
-        self.display.init()
-        self.display.set_backlight(100)
-
         self.screens = {}
         self.current_screen = None
 

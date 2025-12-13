@@ -1,5 +1,5 @@
 from umqtt.simple import MQTTClient
-from secrets import MQTT_BROKER, MQTT_USER, MQTT_PASSWORD
+from secrets import MQTT_BROKER, MQTT_USER, MQTT_PASSWORD, MQTT_PORT, MQTT_SSL
 import machine
 import ubinascii
 
@@ -14,18 +14,27 @@ class MQTT:
         self,
         client_id=ubinascii.hexlify(machine.unique_id()),
         broker=MQTT_BROKER,
+        port=MQTT_PORT,
         user=MQTT_USER,
         password=MQTT_PASSWORD,
+        ssl=MQTT_SSL,
     ):
         """
         Initializes the MQTT client.
         """
         self.client_id = client_id
         self.broker = broker
+        self.port = port
         self.user = user
         self.password = password
+        self.ssl = ssl
         self.client = MQTTClient(
-            self.client_id, self.broker, user=self.user, password=self.password
+            self.client_id,
+            self.broker,
+            port=self.port,
+            user=self.user,
+            password=self.password,
+            ssl=self.ssl,
         )
         self.is_connected = False
         self.subscriptions = {}

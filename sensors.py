@@ -1,6 +1,6 @@
 # sensors.py
 import lvgl as lv
-from secrets import MQTT_TOPIC_PREFIX
+import ujson
 
 
 class SensorScreen:
@@ -21,16 +21,8 @@ class SensorScreen:
         self.table.set_cell_value(0, 0, "Sensor")
         self.table.set_cell_value(0, 1, "Value")
 
-        self.sensors = {
-            "temperature": {"row": 1, "value": "N/A"},
-            "humidity": {"row": 2, "value": "N/A"},
-            "pressure": {"row": 3, "value": "N/A"},
-            "light": {"row": 4, "value": "N/A"},
-        }
-
-        for name, data in self.sensors.items():
-            self.table.set_cell_value(data["row"], 0, name.capitalize())
-            self.table.set_cell_value(data["row"], 1, data["value"])
+        self.sensors = {}
+        self.next_row = 1
 
         self.subscribe_to_topics()
 
@@ -44,20 +36,25 @@ class SensorScreen:
         """
         Subscribes to the MQTT topics for the sensors.
         """
-        for sensor in self.sensors:
-            topic = f"{MQTT_TOPIC_PREFIX}/sensor/{sensor}/state"
-            self.mqtt.subscribe(topic, self.handle_sensor_data)
+        self.mqtt.subscribe("Sensor/#", self.handle_sensor_data)
 
     def handle_sensor_data(self, topic, msg):
         """
         Handles the incoming sensor data from MQTT.
         """
         try:
-            sensor = topic.decode().split("/")[-2]
-            value = msg.decode()
+            sensor_name = topic.decode().split("/")[-1]
+            data = ujson.loads(msg)
+            value = data.get("value")
+            unit = data.get("unit", "")
 
-            if sensor in self.sensors:
-                self.sensors[sensor]["value"] = value
-                self.table.set_cell_value(self.sensors[sensor]["row"], 1, value)
+            if sensor_name not in self.sensors:
+                self.sensors[sensor_name] = {"row": self.next_row}
+                self.table.set_cell_value(self.next_row, 0, sensor_name)
+                self.next_row += 1
+
+            row = self.sensors[sensor_name]["row"]
+            self.table.set_cell_value(row, 1, f"{value} {unit}")
+
         except Exception as e:
             print(f"Error handling sensor data: {e}")
