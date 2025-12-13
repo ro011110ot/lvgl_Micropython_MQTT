@@ -27,26 +27,24 @@ def main():
     mqtt = MQTT()
     mqtt.connect()
     led.set_color(255, 255, 0)  # Yellow for connected
-    time.sleep(3)
+    time.sleep(1)
     led.off()
 
-    # Start the display
-    # disp = display.Display()
-    # disp.add_screen("Weather", weather.WeatherScreen(mqtt))
-    # disp.add_screen("Sensors", sensors.SensorScreen(mqtt))
-    # disp.show_screen("Weather")
+    print("=== Initializing Display Screens ===")
+    # Start the display manager
+    disp = display.Display()
+    disp.add_screen("Weather", weather.WeatherScreen(mqtt))
+    disp.add_screen("Sensors", sensors.SensorScreen(mqtt))
+    disp.show_screen("Weather")
 
-    # Create a simple test screen directly on the active screen
-    scrn = lv.screen_active()
-    label = lv.label(scrn)
-    label.set_text("Hello World!")
-    label.center()
+    print("Display initialized and running!")
+    print("Hardware timer handles LVGL updates automatically.")
+    print("Press Ctrl+C to stop\n")
 
+    # Main loop - Timer läuft automatisch!
     while True:
-        lv.tick_inc(5)
-        lv.task_handler()
         mqtt.check_msg()
-        time.sleep_ms(5)
+        time.sleep_ms(100)
 
 
 if __name__ == "__main__":
