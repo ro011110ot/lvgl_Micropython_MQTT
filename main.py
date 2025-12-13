@@ -39,12 +39,28 @@ def main():
 
     print("Display initialized and running!")
     print("Hardware timer handles LVGL updates automatically.")
+    print("Screens will switch automatically every 10 seconds.")
     print("Press Ctrl+C to stop\n")
+
+    # Liste der Screens für automatischen Wechsel
+    screen_names = ["Weather", "Sensors"]
+    current_screen_index = 0
+    screen_switch_counter = 0
+    SWITCH_INTERVAL = 100  # 100 * 100ms = 10 Sekunden
 
     # Main loop - Timer läuft automatisch!
     while True:
         mqtt.check_msg()
         time.sleep_ms(100)
+
+        # Automatischer Screen-Wechsel
+        screen_switch_counter += 1
+        if screen_switch_counter >= SWITCH_INTERVAL:
+            screen_switch_counter = 0
+            current_screen_index = (current_screen_index + 1) % len(screen_names)
+            next_screen = screen_names[current_screen_index]
+            print(f"Switching to {next_screen} screen...")
+            disp.show_screen(next_screen)
 
 
 if __name__ == "__main__":
