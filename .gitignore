@@ -244,3 +244,8 @@ cython_debug/
 #Own Files
 
 secrets.py
+
+# Generated icon files and intermediate directories
+icons/
+scripts/icons/
+scripts/icons_png/

@@ -6,17 +6,17 @@ import machine
 from micropython import const
 import task_handler
 
-# WICHTIG: Alle Werte müssen integers sein, keine Strings!
+# IMPORTANT: All values must be integers, not strings!
 _WIDTH = const(240)
 _HEIGHT = const(320)
 
-# SPI Bus Pins - MÜSSEN integers sein!
+# SPI Bus Pins - MUST be integers!
 SPI_HOST = 1
 MOSI = 11
 MISO = -1
 SCK = 12
 
-# Display Control Pins - MÜSSEN integers sein!
+# Display Control Pins - MUST be integers!
 CS = 10
 DC = 9
 RST = 14
@@ -30,18 +30,18 @@ if not lv.is_initialized():
 
 print("Creating SPI bus...")
 spi_bus = machine.SPI.Bus(
-    host=int(SPI_HOST),      # Stelle sicher dass es ein int ist
-    mosi=int(MOSI),          # Stelle sicher dass es ein int ist
-    miso=int(MISO),          # Stelle sicher dass es ein int ist
-    sck=int(SCK),            # Stelle sicher dass es ein int ist
+    host=int(SPI_HOST),      # Ensure it is an int
+    mosi=int(MOSI),          # Ensure it is an int
+    miso=int(MISO),          # Ensure it is an int
+    sck=int(SCK),            # Ensure it is an int
 )
 
 print("Creating display bus...")
 display_bus = lcd_bus.SPIBus(
     spi_bus=spi_bus,
-    freq=int(_FREQ),         # Stelle sicher dass es ein int ist
-    dc=int(DC),              # Stelle sicher dass es ein int ist
-    cs=int(CS),              # Stelle sicher dass es ein int ist
+    freq=int(_FREQ),         # Ensure it is an int
+    dc=int(DC),              # Ensure it is an int
+    cs=int(CS),              # Ensure it is an int
 )
 
 print("Creating display driver...")
@@ -49,9 +49,9 @@ display_driver = st7789.ST7789(
     data_bus=display_bus,
     display_width=int(_WIDTH),
     display_height=int(_HEIGHT),
-    reset_pin=int(RST),           # DIREKT als Integer, nicht als Pin-Objekt!
+    reset_pin=int(RST),           # DIRECTLY as an integer, not as a Pin object!
     reset_state=st7789.STATE_LOW,
-    backlight_pin=None,           # Auch None statt Pin-Objekt
+    backlight_pin=None,           # Also None instead of Pin object
     color_space=lv.COLOR_FORMAT.RGB565,
     color_byte_order=st7789.BYTE_ORDER_BGR,
     rgb565_byte_swap=True,
@@ -62,8 +62,8 @@ display_driver.init()
 display_driver.set_backlight(100)
 
 print("Setting up LVGL display...")
-# KRITISCH: LVGL muss wissen, wohin es rendern soll!
-# Erstelle ein LVGL Display-Objekt das mit dem Treiber verknüpft ist
+# CRITICAL: LVGL needs to know where to render!
+# Create an LVGL Display object linked to the driver
 disp = lv.display_get_default()
 if disp is None:
     print("ERROR: No default LVGL display found!")
@@ -81,6 +81,9 @@ class Display:
     """
 
     def __init__(self):
+        """
+        Initializes the Display manager.
+        """
         self.screens = {}
         self.current_screen = None
         print("Display manager initialized")

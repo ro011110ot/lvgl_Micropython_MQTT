@@ -22,10 +22,10 @@ class TaskHandler:
         self.timer = Timer(0)
 
         # Initialize with periodic mode
-        # WICHTIG: period muss eine Zahl sein, nicht String!
+        # IMPORTANT: period must be a number, not a string!
         self.timer.init(
             mode=Timer.PERIODIC,
-            period=int(refresh_rate_ms),  # Stelle sicher dass es ein int ist
+            period=int(refresh_rate_ms),  # Ensure it is an int
             callback=self._timer_callback
         )
 
