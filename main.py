@@ -16,7 +16,7 @@ def main():
     """
     led = StatusLed()
 
-    # Connect to WiFi
+    # Connect to Wi-Fi
     wifi.connect()
 
     # Synchronize time with NTP

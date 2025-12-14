@@ -39,7 +39,7 @@ class StatusLed:
 
     def wifi_connecting(self):
         """
-        Blinks green to indicate WiFi is connecting.
+        Blinks green to indicate Wi-Fi is connecting.
         """
         self.blink((0, 255, 0))
 

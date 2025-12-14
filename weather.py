@@ -87,7 +87,8 @@ class WeatherScreen:
         """
         return self.screen
 
-    def _replace_umlauts(self, text):
+    @staticmethod
+    def _replace_umlauts(text):
         """
         Replace German umlauts with ASCII equivalents.
         """
