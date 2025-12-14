@@ -7,11 +7,27 @@ Used Hardware:
 
   -Build & Flash Command for lvgl_micropython (https://github.com/lvgl-micropython/lvgl_micropython)
 
-    python3 make.py esp32 clean BOARD=ESP32_GENERIC_S3 BOARD_VARIANT=SPIRAM_OCT DISPLAY=st7789 --flash-size=16 --partition-size=4194304 --optimize-size CONFIG_SPIRAM_MODE_OCT=y CONFIG_SPIRAM_SPEED_40M=y CONFIG_BOOTLOADER_WDT_TIME_MS=12000 deploy PORT=/dev/ttyACM0
+    python3 make.py esp32 \
+    clean BOARD=ESP32_GENERIC_S3 \
+    BOARD_VARIANT=SPIRAM_OCT DISPLAY=st7789 \
+    --flash-size=16 \
+    --partition-size=4194304 \
+    --optimize-size \
+    CONFIG_SPIRAM_MODE_OCT=y \
+    CONFIG_SPIRAM_SPEED_80M=y \
+    CONFIG_BOOTLOADER_WDT_TIME_MS=12000 \
+    deploy PORT=/dev/ttyACM0
     
     
     
-    python3 -m esptool --chip esp32s3 -b 460800 --before default_reset --after hard_reset write_flash --flash_mode dio --flash_size 16MB --flash_freq 80m --erase-all 0x0 /home/ro011110ot/lvgl_micropython/build/lvgl_micropy_ESP32_GENERIC_S3-SPIRAM_OCT-16.bin
+    python3 -m esptool \
+    --chip esp32s3 -b 460800 \
+    --before default_reset \
+    --after hard_reset write_flash \
+    --flash_mode dio \
+    --flash_size 16MB \
+    --flash_freq 80m \
+    --erase-all 0x0 /home/ro011110ot/lvgl_micropython/build/lvgl_micropy_ESP32_GENERIC_S3-SPIRAM_OCT-16.bin
 
 ## Features
 
